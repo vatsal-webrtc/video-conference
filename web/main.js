@@ -3,6 +3,8 @@
 
 // Config variables: change them to point to your own servers
 const SIGNALING_SERVER_URL = 'http://localhost:9999';
+// const SIGNALING_SERVER_URL = 'https://f168a1598114.ngrok.io:9999';
+
 const TURN_SERVER_URL = 'localhost:3478';
 const TURN_SERVER_USERNAME = 'username';
 const TURN_SERVER_CREDENTIAL = 'credential';
@@ -33,7 +35,7 @@ socket.on('data', (data) => {
 
 socket.on('ready', () => {
   console.log('Ready');
-  // Connection with signaling server is ready, and so is local stream
+  // Connection with signaling server is ready
   createPeerConnection();
   sendOffer();
 });
@@ -47,6 +49,7 @@ let pc;
 let localStream;
 let remoteStreamElement = document.querySelector('#remoteStream');
 
+//for fetching the local streams
 let getLocalStream = () => {
   navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     .then((stream) => {
@@ -56,6 +59,7 @@ let getLocalStream = () => {
       selfStreamElement.srcObject= stream;
       // var textnode = document.createTextNode("Water");
       // selfStreamElement.appendChild(textnode);
+      //append the "Joinee Name" after submit button is clicked
       $('#name').append(userName);
       // Connect after making sure that local stream is availble
       socket.connect();
@@ -65,6 +69,7 @@ let getLocalStream = () => {
     });
 }
 
+// RTC PEER connection object for adding the stream
 let createPeerConnection = () => {
   try {
     pc = new RTCPeerConnection(PC_CONFIG);
@@ -76,7 +81,7 @@ let createPeerConnection = () => {
     console.error('PeerConnection failed: ', error);
   }
 };
-
+// Offer and answer for communication
 let sendOffer = () => {
   console.log('Send offer');
   pc.createOffer().then(
@@ -149,6 +154,7 @@ $(document).ready(function () {
   $("#login-form-from-invitation input.display_name").focus();
 
   }
+  // Action after submitting the button to self name
   showFormFromInvitation();
   $(".userSubmitBtn").click(function (e) {
     userName = $("#userSubmit").val();

@@ -2,11 +2,10 @@ from aiohttp import web
 import socketio
 
 ROOM = 'room'
-
+# websocket initiation for signalling server based on sockets
 sio = socketio.AsyncServer(cors_allowed_origins='*', ping_timeout=35)
 app = web.Application()
 sio.attach(app)
-
 
 @sio.event
 async def connect(sid, environ):
@@ -20,7 +19,7 @@ def disconnect(sid):
     sio.leave_room(sid, ROOM)
     print('Disconnected', sid)
 
-
+# data event when any of the user send the media stream
 @sio.event
 async def data(sid, data):
     print('Message from {}: {}'.format(sid, data))
